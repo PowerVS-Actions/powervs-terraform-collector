@@ -173,14 +173,9 @@ function process_data(){
 
 	echo "$TODAY,$TIME,$ACCOUNT,$ID,$PVSNAME,$REGION,$NINSTANCES,$PROCESSORS,$MEMORY,$TIER1,$TIER3"
 
-	#echo "$TODAY,$TIME,$ACCOUNT,$ID,$PVSNAME,$REGION,$NINSTANCES,$PROCESSORS,$MEMORY,$TIER1,$TIER3" >> "$ACCOUNT.csv"
+	echo "$TODAY,$TIME,$ACCOUNT,$ID,$PVSNAME,$REGION,$NINSTANCES,$PROCESSORS,$MEMORY,$TIER1,$TIER3" >> "$ACCOUNT.csv"
 
 	echo "$TODAY,$TIME,$ACCOUNT,$ID,$PVSNAME,$REGION,$NINSTANCES,$PROCESSORS,$MEMORY,$TIER1,$TIER3" >> ./all.csv
-
-	# remove lines with null entries
-	sed '/null/d' ./all.csv > /tmp/all.csv
-	rm -f ./all.csv
-	mv /tmp/all.csv ./
 
 	INFO=(
 	"*********************************************"
@@ -209,10 +204,17 @@ run (){
 	while read -r line; do
 		ACCOUNT=$(echo "$line" | awk -F ',' '{print $1}')
 		API_KEY=$(echo "$line" | awk -F ',' '{print $2}')
+		echo "Collecting data from $ACCOUNT..."
 		connect_ibm_cloud "$API_KEY"
 		get_powervs_services_data
 		get_powervs_raw_data "$ACCOUNT" "$API_KEY"
 	done < ./api_keys
+
+	# remove lines with null entries
+	sed '/null/d' ./all.csv > /tmp/all.csv
+	rm -f ./all.csv
+	mv /tmp/all.csv ./
+
 	mkdir -p ./output
 	cp ./all.csv ./"$(echo "$TODAY" | tr -d "/")"-all.csv
 	mv ./*.csv ./output

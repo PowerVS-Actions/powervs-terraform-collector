@@ -4,9 +4,10 @@ LABEL authors="Rafael Sene - rpsene@br.ibm.com"
 
 WORKDIR /terraform
 
-RUN ibmcloud plugin update power-iaas --force
+RUN ibmcloud plugin update power-iaas --force; microdnf update -y
 
 COPY ./main.tf .
+COPY ./provider.tf .
 COPY ./variables.tf .
 COPY ./collector.sh .
 
