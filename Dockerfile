@@ -7,7 +7,6 @@ WORKDIR /terraform
 RUN ibmcloud plugin update power-iaas --force
 
 COPY ./main.tf .
-COPY ./provider.tf .
 COPY ./variables.tf .
 COPY ./collector.sh .
 
