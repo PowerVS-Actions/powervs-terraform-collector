@@ -17,7 +17,9 @@ function connect_ibm_cloud(){
         echo "API KEY was not set."
         exit
     fi
-	ibmcloud login --no-region --apikey "$API_KEY" > /dev/null 2>&1
+    ibmcloud update -f > /dev/null 2>&1
+    ibmcloud plugin update --all > /dev/null 2>&1
+    ibmcloud login --no-region --apikey "$APY_KEY" > /dev/null 2>&1
 }
 
 function get_powervs_services_data() {
